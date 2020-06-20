@@ -1,4 +1,4 @@
-/* levelgaugexy.js  - Index Level Gauges x è y*/
+/* levelgaugexy.js  - Index Level Gauges x and y*/
 
 'use strict';
 
@@ -109,7 +109,7 @@ class LevelGaugeXY {
     return ( this.list.dependY ? 'inverse' : 'directly' ) ;
   } 
 
-  // strip color XÓ
+  // strip color XÃ“
   set colorXY( v ) {  
     this.list.colorXY = ( v == 'none') ? '': v.replace(/[rgb()]/g,'');
     if ( this._visible) this._strip();  
