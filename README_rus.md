@@ -1,7 +1,7 @@
 # levelGaugeXY - _Уровнемеры индексов x и y_
 Навигация и визуальное отображение текущuх и наибольших значений индексов массива \[x,y\] 
 
-[Демо](https://slesareva-gala.github.io/demolgxy_rus)  
+[Демо](https://slesareva-gala.github.io/levelgaugexy_rus)  
   
 **Причина создания**  
 Необходимость в визуализации навигации по табличным данным.
