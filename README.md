@@ -102,7 +102,7 @@ Main characteristics of index level gauges:
 ```html 
    <head>
     <!-- .... -->
-    <script src="levelGaugeXY.min.js"></script> 
+    <script src="levelgaugexy.min.js"></script> 
    </head>
    <body>
      <!-- .... -->
