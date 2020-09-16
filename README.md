@@ -196,7 +196,7 @@ Values:
 \- **\'rgb (...)\'** - drawing a shadow with the specified rgb color;  
 The default value is set to \'rgb (200,200,200)\'.
 
-**colorlevel**  
+**colorLevel**  
 Color Level Gauges.  
 Value: **\'rgb (...)\'** - drawing a shadow with the specified rgb color.  
 The default value is set to \'rgb (100,100,100)\'.
