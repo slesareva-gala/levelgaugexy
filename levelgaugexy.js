@@ -1,4 +1,4 @@
-/* levelgaugexy.js  - Index Level Gauges x and y*/
+/* levelgaugexy.js  - Index Level Gauges x and y */
 
 'use strict';
 
@@ -111,20 +111,20 @@ class LevelGaugeXY {
 
   // strip color XÓ
   set colorXY( v ) {  
-    this.list.colorXY = ( v == 'none') ? '': v.replace(/[rgb()]/g,'');
+    this.list.colorXY = ( v == 'none') ? '': v.replace(/[rgba()]/g,'');  
     if ( this._visible) this._strip();  
   }
   get colorXY() { 
-    return ( this.list.colorXY ? 'rgb('+this.list.colorXY+')' : 'none') ;
+    return ( this.list.colorXY ? 'rgba('+this.list.colorXY+')' : 'none') ; 
   } 
 
   // level gauge color
   set colorLevel( v ) {  
-    this.list.colorLevel = v.replace(/[rgb()]/g,''); 
+    this.list.colorLevel = v.replace(/[rgba()]/g,''); 
     if ( this._visible) this._level();
   }
   get colorLevel() { 
-    return 'rgb('+this.list.colorLevel+')' ;
+    return 'rgba('+this.list.colorLevel+')' ; 
   } 
 
   // display of strip changes and level gauges
@@ -170,8 +170,8 @@ class LevelGaugeXY {
 
   // saving div size values
   _saveOffset() {
-    this.bHeight = this.base.offsetHeight; 
-    this.bWidth  = this.base.offsetWidth;
+    this.bHeight = this.base.clientHeight; 
+    this.bWidth  = this.base.clientWidth; 
     this.wWidth  = this.work.offsetWidth;
     this.wHeight = this.work.offsetHeight;
     this.widthX  = this.bHeight - this.wHeight ;  
@@ -186,9 +186,9 @@ class LevelGaugeXY {
                          this.widthY == 0 ? this.widthX :
                          Math.min( this.widthX, this.widthY );
       this.base.style.boxShadow = 
-           'rgba('+this.list.colorXY+', 0.9) '+ -this.list.locationY +'px '
+           'rgba('+this.list.colorXY+') '+ -this.list.locationY +'px '
                   + -this.list.locationX + 'px 1px , '+
-           'rgba('+this.list.colorXY+', 0.9) '
+           'rgba('+this.list.colorXY+') '  
                   + this.list.locationY * -0.75 * this.widthY +'px '
                   + this.list.locationX * -0.75 * this.widthX +'px '
                   + shadowSpread+'px inset';  
@@ -212,12 +212,12 @@ class LevelGaugeXY {
         Math.ceil( yL * this.wHeight / this.list.lenY ) ); 
 
     this.work.style.boxShadow = 
-        'rgba('+ this.list.colorLevel+', 0.3) '+ this.list.locationY * 0.5 + 'px '
+        'rgba('+ this.list.colorLevel+') '+ this.list.locationY * 0.5 + 'px ' 
                + this.list.locationX * 0.5 +'px 1px 0px , '+
-        'rgba('+ this.list.colorLevel+', 0.3) '
+        'rgba('+ this.list.colorLevel+') '   
                + this.list.locationY * this.wWidth+'px '
                + this.list.locationX * this.wHeight+'px 0px 0px ,'+
-        'rgba('+ this.list.colorLevel+', 0.3) '
+        'rgba('+ this.list.colorLevel+') '  
                + this.list.locationY * (shadowSpread + levelX) +'px '
                + this.list.locationX * (shadowSpread + levelY) + 'px 0px '
                + shadowSpread +'px ' ;
@@ -251,34 +251,46 @@ class LevelGaugeXY {
   } 
 
   // mouse click navigation
-  _click(e, _this){
+  _click(e, _this){  
 
-    let mX = e.pageX - pageXOffset;
-    let mY = e.pageY - pageYOffset;
+    let mX = Math.round(e.pageX - pageXOffset); 
+    let mY = Math.round(e.pageY - pageYOffset); 
 
-    let crBase = _this.base.getBoundingClientRect();
-    let crWork = _this.work.getBoundingClientRect();
+    let crWork = {};
+    let coords = _this.work.getBoundingClientRect();
+    ['top','bottom','left','right','width','height'].forEach( (p) => {
+      crWork[p] = Math.round(coords[p]); });
+    --crWork.bottom;
+    --crWork.right;
+
+    let isXbottom = _this.locationX == 'bottom';   
+    let isYright  = _this.locationY == 'right';    
+
+    e.preventDefault(); 
 
     // strip X
-    if ( ( ( mY > crBase.top  && mY < crWork.top ) 
-        || ( mY > crWork.bottom && mY < crBase.bottom ) )
-      && ( mX > crWork.left && mX < crWork.right) ) {
-      let x = Math.ceil( (mX-crWork.left)*_this.lenX / crWork.width );
-      _this.x = (_this.locationY == 'right' ? 
+    if ( ( isXbottom ? ( mY > crWork.bottom && mY <= (crWork.bottom +_this.widthX) )
+                     : ( mY >= (crWork.top-_this.widthX) && mY < crWork.top ) )    
+      && ( mX >= crWork.left && mX <= crWork.right ) ) {              
+
+      let x = ( mX == crWork.left ) ? 0 : ( mX == crWork.right) ? _this.lenX :
+              Math.ceil( (mX-crWork.left)*_this.lenX / crWork.width );
+      _this.x = ( isYright ?                                           
                  _this.dependX =='inverse' : 
                  _this.dependX =='directly') ? x-1 : _this.lenX - x ;
     }
 
     // strip Y
-    if ( ( ( mX > crBase.left  && mX < crWork.left ) 
-        || ( mX > crWork.right && mX < crBase.right ) )
-      && ( mY > crWork.top && mY < crWork.bottom) ) {
-      let y = Math.ceil( (mY-crWork.top)*_this.lenY / crWork.height );
-      _this.y = (_this.locationX == 'bottom' ? 
+    if ( ( isYright ? ( mX > crWork.right && mX <= (crWork.right +_this.widthY) )  
+                    : ( mX >= (crWork.left-_this.widthY) && mX < crWork.left ) )   
+      && ( mY >= crWork.top && mY <= crWork.bottom) ) {             
+
+      let y = ( mY == crWork.top ) ? 0 : ( mY == crWork.bottom) ? _this.lenY :
+              Math.ceil( (mY-crWork.top)*_this.lenY / crWork.height );
+      _this.y = ( isXbottom ?                                 
                  _this.dependY =='inverse' : 
                  _this.dependY =='directly') ? y-1 : _this.lenY - y ;
     }
-
   } // END _click()
 
   // self destruction
@@ -296,7 +308,7 @@ class LevelGaugeXY {
     // disable event listening:
     window.removeEventListener('resize', this._resizeEvent, false );
     this.base.removeEventListener("wheel", this._wheelEvent, {passive:false} );
-    this.base.removeEventListener("click", this._clickEvent, false );
+    this.base.removeEventListener("mousedown", this._clickEvent, false ); 
 
     // disconnect from class
     if ( this.base.lgxy.__proto__ ) this.base.lgxy.__proto__ = null;
@@ -330,11 +342,13 @@ class LevelGaugeXY {
       dependY: 1,   
       locationX: 1,
       locationY: 1,
-      colorXY:'200,200,200',
-      colorLevel:'100,100,100',
+      colorXY:'200,200,200,0.9',    
+      colorLevel:'100,100,100,0.3', 
     };
     // hide changes in bands and level gauges
     this.hidden();
+    this.locationX = 'bottom'; 
+    this.locationY = 'right';  
 
     // overriding property values 
     for ( let key in param ) {
@@ -354,7 +368,7 @@ class LevelGaugeXY {
     this.base.addEventListener("wheel", this._wheelEvent = function(e){ _this._wheel(e,_this) }, {passive:false} );
 
     // mouse click navigation
-    this.base.addEventListener("click", this._clickEvent = function(e){ _this._click(e,_this) }, false );
+    this.base.addEventListener("mousedown", this._clickEvent = function(e){ _this._click(e,_this) }, false ); 
 
     // display of strips and level gauges
     this.visible();
@@ -364,10 +378,15 @@ class LevelGaugeXY {
 } // END class LevelGaugeXY
 
 // connecting an object of class LevelGaugeXY to the base div element
-function levelGaugeXY( idBase, idWork, param={} ) {
-  let base = document.getElementById( idBase );
+function levelGaugeXY( idBase, idWork, param={} ) { 
+   let base, work;
+
+  if ( typeof(idBase) == 'object' ) base = idBase ;
+  else base = document.getElementById( idBase );
   if ( !base ) return;
-  let work = document.getElementById( idWork );
+
+  if ( typeof(idWork) == 'object' ) work = idWork ;
+  else work = document.getElementById( idWork );
   if ( !work ) return;
 
   base.lgxy = new LevelGaugeXY( base, work, param );
