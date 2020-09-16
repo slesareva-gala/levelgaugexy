@@ -193,13 +193,13 @@ The default value is set to \'inverse\'.
 Strips color.  
 Values:  
 \- **\'none\'** - disable shadows style;  
-\- **\'rgb (...)\'** - drawing a shadow with the specified rgb color;  
-The default value is set to \'rgb (200,200,200)\'.
+\- **\'rgba (...)\'** - drawing a shadow with the specified rgb color;  
+The default value is set to \'rgba (200,200,200,0.9)\'.
 
 **colorLevel**  
 Color Level Gauges.  
-Value: **\'rgb (...)\'** - drawing a shadow with the specified rgb color.  
-The default value is set to \'rgb (100,100,100)\'.
+Value: **\'rgba (...)\'** - drawing a shadow with the specified rgb color.  
+The default value is set to \'rgba (100,100,100,0.3)\'.
 
 ### 3.2. Service methods on the base.lgxy object
 
