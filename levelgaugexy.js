@@ -265,9 +265,7 @@ class LevelGaugeXY {
 
     let isXbottom = _this.locationX == 'bottom';   
     let isYright  = _this.locationY == 'right';    
-
-    e.preventDefault(); 
-
+  
     // strip X
     if ( ( isXbottom ? ( mY > crWork.bottom && mY <= (crWork.bottom +_this.widthX) )
                      : ( mY >= (crWork.top-_this.widthX) && mY < crWork.top ) )    
@@ -278,6 +276,7 @@ class LevelGaugeXY {
       _this.x = ( isYright ?                                           
                  _this.dependX =='inverse' : 
                  _this.dependX =='directly') ? x-1 : _this.lenX - x ;
+      e.preventDefault(); 
     }
 
     // strip Y
@@ -290,6 +289,7 @@ class LevelGaugeXY {
       _this.y = ( isXbottom ?                                 
                  _this.dependY =='inverse' : 
                  _this.dependY =='directly') ? y-1 : _this.lenY - y ;
+      e.preventDefault(); 
     }
   } // END _click()
 
