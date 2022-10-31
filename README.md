@@ -1,7 +1,7 @@
 # levelGaugeXY - _level gauges for x and y indices_
 Navigation and visual display of the current and largest values of the array indices \[x, y\]
 
-[demo page](https://slesareva-gala.github.io/levelgaugexy)
+[demo page](https://slesareva-gala.github.io/levelgaugexy_rus)
   
 **The reason for the creation**  
 Need to visualize tabular data navigation.
